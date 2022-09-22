@@ -1,0 +1,55 @@
+#segmented sieve
+#include<bits/stdc++.h>
+using namespace std;
+#define Max 32000 // 10^9
+using ll = long long ;
+vector<ll> primes;
+
+void sieve()
+{
+    bool isprime[Max];
+    for(int i=0; i<Max; i++) isprime[i]=true;
+    for(int i=3; i*i<=Max; i+=2)
+    {
+        for(int j=i*i; j<=Max; j+=i)
+        {
+            isprime[j]=false;
+        }
+    }
+    primes.push_back(2);
+    for(int i=3; i<=Max; i+=2)
+    {
+        if(isprime[i]==1) primes.push_back(i);
+    }
+
+}
+void segsieve(ll l,ll r)
+{
+    bool isprimes[r-l+1];
+  for(int i=0;i<r-l+1;i++) isprimes[i]=true;
+  if(l==1) isprimes[0]=false;
+    for(int i=0; primes[i]*primes[i]<=r; i++)
+    {
+        ll current_prime= primes[i];
+        ll base = (l/current_prime)*current_prime;
+        if(base<l) base+=current_prime;
+        for(int j=base; j<=r; j+=current_prime )
+        {
+            isprimes[j-l]=false;
+
+        }
+        if(base==current_prime) isprimes[base-l]=true;
+
+    }
+     for(int i=0; i<r-l+1; i++)
+        {
+            if(isprimes[i]) cout<<i+l<<" ";
+        }
+}
+int main()
+{
+    sieve();
+    int l,r;
+    cin>>l>>r;
+    segsieve(l,r);
+}
